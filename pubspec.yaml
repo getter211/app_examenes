@@ -45,7 +45,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  audioplayers: ^6.0.0
+  
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -76,8 +76,7 @@ flutter:
     - assets/icono5.png
     - assets/icono6.png
     - assets/icono7.png
-    - assets/sounds/correct.mp3
-    - assets/sounds/incorrect.mp3
+    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
