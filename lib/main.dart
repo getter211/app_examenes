@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.light,
         colorScheme: const ColorScheme.light().copyWith(
-          background: Colors.white,
+          surface: Colors.white,
           primary: Colors.blue,
           secondary: Colors.red,
         ),
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         'view_home': (context) => const Home(),
         'view_Rules': (context) => const Rules(),
         'view_Game': (context) => const Game([]),
-        'view_Result': (context) => const Result([], []),
+        'view_Result': (context) => const Result([], [], []),
       },
       builder: (context, child) {
         return LayoutBuilder(

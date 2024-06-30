@@ -1,9 +1,8 @@
 // ignore_for_file: avoid_unnecessary_containers
 
-
 import 'package:app_examenes/model/question.dart';
 import 'package:app_examenes/pages/view_rules.dart';
-import 'package:app_examenes/pages/widgets/my_text.dart';
+import 'package:app_examenes/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_icons/awesome_icons.dart';
 import 'package:app_examenes/utils/responsive.dart';
@@ -13,15 +12,17 @@ class Result extends StatefulWidget {
   static String routeName = 'view_Result';
   final List<Questions> questionsSuccess;
   final List<Questions> questionsFail;
+  final List<Questions> questionsNoAnswer;
 
-  const Result(this.questionsSuccess, this.questionsFail, {super.key});
+  const Result(
+      this.questionsSuccess, this.questionsFail, this.questionsNoAnswer,
+      {super.key});
 
   @override
   State<Result> createState() => _ResultState();
 }
 
 class _ResultState extends State<Result> {
-
   @override
   Widget build(BuildContext context) {
     Responsive resp = Responsive(context);
@@ -34,12 +35,14 @@ class _ResultState extends State<Result> {
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/fondo.jpg'),
-                    fit: BoxFit.cover, // Ajusta la imagen al tamaño del contenedor
+                    fit: BoxFit
+                        .cover, // Ajusta la imagen al tamaño del contenedor
                   ),
                 ),
               ),
               Container(
-                color: Colors.black.withOpacity(0.4), // Capa negra con opacidad del 50%
+                color: Colors.black
+                    .withOpacity(0.4), // Capa negra con opacidad del 50%
               ),
               Container(
                 child: Center(child: _buildMobileLayout(resp, 1)),
@@ -53,9 +56,18 @@ class _ResultState extends State<Result> {
 
   Container containerResult(String text, int nPregunta) {
     return Container(
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
+        color: Colors.cyan,
         border: Border.all(color: Colors.grey, width: 1),
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -81,28 +93,29 @@ class _ResultState extends State<Result> {
 
   Widget _buildMobileLayout(Responsive resp, int nPregunta) {
     int r = widget.questionsSuccess.length;
-    double w = resp.width <= 1000 ? resp.widthPercent(80) : resp.widthPercent(60);
-    double h = resp.height <= 700 ? resp.heightPercent(80) : resp.heightPercent(60);
+    double w =
+        resp.width <= 1000 ? resp.widthPercent(80) : resp.widthPercent(60);
+    double h =
+        resp.height <= 700 ? resp.heightPercent(80) : resp.heightPercent(60);
     double title = resp.width <= 1000 ? 14 : 35;
     double text = resp.width <= 1000 ? 10 : 20;
     String mensaje = r >= 10
-        ? "¡Enhorabuena! Has superado el examen , eres un Genio😎"
+        ? "¡Enhorabuena! Has superado el examen, eres un Genio😎"
         : (r >= 8 && r <= 9)
-            ? "Que bien!!, Has superado el examen , Q crack 😅"
+            ? "¡Qué bien! Has superado el examen, ¡qué crack! 😅"
             : (r >= 5 && r <= 7)
-                ? "Falta estudiar 🥱"
+                ? "Necesitas estudiar más 🥱"
                 : (r >= 1 && r <= 4)
-                    ? "Falta estudiar aun mas ☹️"
-                    : "Date de baja ☠️";
+                    ? "Necesitas estudiar mucho más 😑"
+                    : "¡Date de baja! ☠️";
     String imagen = r >= 10
         ? 'assets/icono3.png'
         : (r >= 8 && r <= 9)
             ? 'assets/icono4.png'
             : (r >= 5 && r <= 7)
                 ? 'assets/icono2.png'
-                : (r >= 1 && r <= 4)
-                    ? 'assets/icono6.png'
-                    : 'assets/icono6.png';
+                : 'assets/icono6.png';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -113,6 +126,13 @@ class _ResultState extends State<Result> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: const Color(0xFF1C1E50),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  ),
+                ],
               ),
               width: w,
               height: h,
@@ -127,12 +147,13 @@ class _ResultState extends State<Result> {
                           md: 12,
                           lg: 12,
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 30, right: 30, top: 20),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 20),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 MyTextClass(
-                                  text: "FELICIDADES!!!",
+                                  text: "FELICIDADES!!! 🎉🎉",
                                   fontSize: text,
                                   colorText: Colors.white,
                                   bold: true,
@@ -146,7 +167,7 @@ class _ResultState extends State<Result> {
                   Padding(
                     padding: const EdgeInsets.only(left: 30),
                     child: MyTextClass(
-                      text: "Haz finalizado el Examen",
+                      text: "Haz finalizado el Examen 🫡",
                       fontSize: text,
                       colorText: Colors.white,
                       bold: true,
@@ -168,7 +189,7 @@ class _ResultState extends State<Result> {
                     ],
                   ),
                   ResponsiveGridRow(
-                    rowSegments: 10,
+                    rowSegments: 15,
                     children: <ResponsiveGridCol>[
                       ResponsiveGridCol(
                         xs: 5,
@@ -176,9 +197,9 @@ class _ResultState extends State<Result> {
                         md: 5,
                         lg: 5,
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 20, right: 20),
-                          child: containerResult(
-                              "Respuestas Correctas: ✅ ", widget.questionsSuccess.length),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: containerResult("Respuestas Correctas: ✅ ",
+                              widget.questionsSuccess.length),
                         ),
                       ),
                       ResponsiveGridCol(
@@ -187,9 +208,20 @@ class _ResultState extends State<Result> {
                         md: 5,
                         lg: 5,
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 20, left: 20),
-                          child: containerResult(
-                              "Respuestas Incorrectas: ❌ ", widget.questionsFail.length),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: containerResult(" no contestadas: ❓ ",
+                              widget.questionsNoAnswer.length),
+                        ),
+                      ),
+                      ResponsiveGridCol(
+                        xs: 5,
+                        xl: 5,
+                        md: 5,
+                        lg: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: containerResult("Respuestas Incorrectas: ❌ ",
+                              widget.questionsFail.length),
                         ),
                       ),
                     ],
@@ -210,38 +242,43 @@ class _ResultState extends State<Result> {
                   Padding(
                     padding: const EdgeInsets.only(right: 15),
                     child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const SizedBox(width: 20),
-                              Container(
-                                width: 100,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.blue[800],
-                                  border: Border.all(color: Colors.blue.shade900),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: TextButton.icon(
-                                  icon: const Icon(
-                                    FontAwesomeIcons.caretRight,
-                                    color: Colors.white,
-                                    size: 15,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pushNamed(context, Rules.routeName);
-                                  },
-                                  label: const Text(
-                                    "Volver a jugar",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const SizedBox(width: 20),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.pushNamed(context, Rules.routeName);
+                          },
+                          icon: const Icon(
+                            FontAwesomeIcons.caretRight,
+                            color: Colors.white,
+                            size: 15,
                           ),
+                          label: const Text(
+                            "Volver a jugar",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor:
+                                Colors.cyan, // Color del texto y el icono
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            textStyle: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -252,4 +289,3 @@ class _ResultState extends State<Result> {
     );
   }
 }
-

@@ -64,7 +64,7 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.',
+                'FlutterHub es una aplicación de prueba para el curso de Flutter. puedes usarla para practicar y aprender teoría Flutter a base examenes de preguntas y respuestas',
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
@@ -87,7 +87,6 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildDesktopLayout(BuildContext context) {
-    const Color btnColor = Colors.white;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -101,25 +100,30 @@ class _HomeState extends State<Home> {
               children: [
                 const Text(
                   'Bienvenido a\n FlutterHub',
-                  style: TextStyle(fontSize: 90, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(fontSize: 90, fontWeight: FontWeight.bold, color: Colors.white, ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. \nInteger nec odio. Praesent libero. Sed cursus ante dapibus diam.',
-                  style: TextStyle(fontSize: 15, color: Colors.white),
-                  textAlign: TextAlign.center,
+                const Padding(
+                  padding: EdgeInsets.all(30),
+                  child: Text(
+                    'FlutterHub es una aplicación de prueba para el curso de Flutter. puedes usarla para practicar y aprender teoría Flutter a base examenes de preguntas y respuestas',
+                    style: TextStyle(fontSize: 15, color: Colors.white),
+                    textAlign: TextAlign.left,
+                  ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 60),
                 PrettySlideIconButton(
-                  foregroundColor: btnColor,
+                  foregroundColor: Colors.cyan,
+                
                   icon: Icons.arrow_forward,
-                  label: 'Pretty Slide Icon Button',
+                  label: '¡Empieza!',
                   slidePosition: SlidePosition.right,
                   labelStyle: Theme.of(context).textTheme.bodyLarge!,
                   onPressed: () {
                     Navigator.pushNamed(context, Rules.routeName);
                   },
                 ),
+                
               ],
             ),
           ),

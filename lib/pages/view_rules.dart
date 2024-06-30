@@ -29,7 +29,8 @@ class _RulesState extends State<Rules> {
 
   Future<void> fetchQuestions() async {
     try {
-      final response = await http.get(Uri.parse('http://localhost:3000/api/questions'));
+      final response =
+          await http.get(Uri.parse('http://localhost:3000/api/questions'));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
@@ -64,12 +65,14 @@ class _RulesState extends State<Rules> {
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/fondo.jpg'),
-                    fit: BoxFit.cover, // Ajusta la imagen al tamaño del contenedor
+                    fit: BoxFit
+                        .cover, // Ajusta la imagen al tamaño del contenedor
                   ),
                 ),
               ),
               Container(
-                color: Colors.black.withOpacity(0.4), // Capa negra con opacidad del 50%
+                color: Colors.black
+                    .withOpacity(0.4), // Capa negra con opacidad del 50%
               ),
               Container(
                 child: Center(child: _buildMobileLayout(resp)),
@@ -82,8 +85,10 @@ class _RulesState extends State<Rules> {
   }
 
   Widget _buildMobileLayout(Responsive resp) {
-    double w = resp.width <= 1000 ? resp.widthPercent(80) : resp.widthPercent(60);
-    double h = resp.height <= 700 ? resp.heightPercent(80) : resp.heightPercent(60);
+    double w =
+        resp.width <= 1000 ? resp.widthPercent(80) : resp.widthPercent(60);
+    double h =
+        resp.height <= 700 ? resp.heightPercent(80) : resp.heightPercent(60);
     double title = resp.width <= 1500 ? 14 : 35;
     double text = resp.width <= 800
         ? 10
@@ -109,22 +114,30 @@ class _RulesState extends State<Rules> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 50, right: 0, left: 40, bottom: 20),
+                      padding: const EdgeInsets.only(
+                          top: 50, right: 0, left: 40, bottom: 20),
                       // padding: const EdgeInsets.only(top: 20, right: 300, left: 40, bottom: 20),
                       child: Column(
                         children: [
                           Text(
                             'Reglas del Juego',
                             style: TextStyle(
-                                fontSize: title, fontWeight: FontWeight.bold, color: Colors.white),
+                                fontSize: title,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 20),
                           Container(
                             width: resp.widthPercent(30),
                             child: Text(
-                              'Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original.',
+                              '1. Solo tendrás 15 segundos para responder cada pregunta.\n'
+                              '2. Una vez que seleccionas tu respuesta, no se puede cambiar.\n'
+                              '3. No puedes seleccionar ninguna opción una vez acabado el tiempo.\n'
+                              '4. No puedes salir del examen hasta que termines el tiempo.\n'
+                              '5. Obtendrás tu resultado al final del examen.',
                               textAlign: TextAlign.start,
-                              style: TextStyle(fontSize: text, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize: text, color: Colors.white),
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -137,15 +150,30 @@ class _RulesState extends State<Rules> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ElevatedButton(
+                          ElevatedButton.icon(
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => Game(_questions)),
+                                MaterialPageRoute(
+                                    builder: (context) => Game(_questions)),
                               );
                             },
-                            child: const Text('Iniciar'),
-                          ),
+                            icon: const Icon(Icons.play_arrow,
+                                color: Colors.white),
+                            label: const Text(
+                              'Iniciar',
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.cyan,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 24),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),

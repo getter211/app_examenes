@@ -1,11 +1,11 @@
-// ignore_for_file: sized_box_for_whitespace, avoid_unnecessary_containers, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, library_private_types_in_public_api, unused_field
+// ignore_for_file: prefer_const_constructors_in_immutables, use_key_in_widget_constructors, library_private_types_in_public_api, avoid_unnecessary_containers, unused_field, unused_element, sized_box_for_whitespace
 
 import 'dart:async';
 import 'dart:math';
-
 import 'package:app_examenes/model/question.dart';
 import 'package:app_examenes/pages/view_result.dart';
-import 'package:app_examenes/pages/widgets/my_text.dart';
+import 'package:app_examenes/widgets/color_changing_button.dart';
+import 'package:app_examenes/widgets/my_text.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_icons/awesome_icons.dart';
 import 'package:app_examenes/utils/responsive.dart';
@@ -35,11 +35,16 @@ class _GameState extends State<Game> {
   late List<Questions> _randomQuestions;
   final List<Questions> _questionsSuccess = [];
   final List<Questions> _questionsFail = [];
+  final List<Questions> _questionsNoAnswer = [];
   int _currentQuestionIndex = 0;
   bool _showAnswers = false;
   int miliseconds = 14000;
   bool finish = false;
   bool saveResult = true;
+  bool isTap = false;
+  Questions? questtionTemp;
+  int score = 3;
+  bool timeActive = false;
 
   @override
   void initState() {
@@ -89,19 +94,25 @@ class _GameState extends State<Game> {
         } else {
           //_timer.cancel();
           _timer2.cancel();
-          _showAnswers = true;
-          Future.delayed(const Duration(seconds: 1), () {
-            _nextQuestion();
-          });
+          _saveUnansweredQuestion();
+          timeActive = true;
         }
       });
+    });
+  }
+
+  void _saveUnansweredQuestion() {
+    setState(() {
+      _questionsNoAnswer.add(_randomQuestions[_currentQuestionIndex]);
     });
   }
 
   void _nextQuestion() {
     //_timer.cancel(); // Detener el temporizador cuando llegue a cero
     _timer2.cancel();
+
     start = true;
+    isTap = false;
     setState(() {
       if (_currentQuestionIndex < _randomQuestions.length - 1) {
         saveResult = true;
@@ -118,7 +129,8 @@ class _GameState extends State<Game> {
     Responsive resp = Responsive(context);
     _resp = resp;
     if (start) {
-      _containerWidth = resp.width.clamp(0.0, double.infinity); // Ensure non-negative width
+      _containerWidth =
+          resp.width.clamp(0.0, double.infinity); // Ensure non-negative width
       _barColor = Colors.green;
       _countdown = 15;
       miliseconds = 300;
@@ -169,9 +181,11 @@ class _GameState extends State<Game> {
                     child: Container(
                       child: Row(
                         children: [
-                          const Icon(FontAwesomeIcons.stopwatch, color: Colors.white, size: 30),
+                          const Icon(FontAwesomeIcons.stopwatch,
+                              color: Colors.white, size: 30),
                           Text(_countdown.toString(),
-                              style: const TextStyle(color: Colors.white, fontSize: 30)),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 30)),
                         ],
                       ),
                     ),
@@ -179,7 +193,8 @@ class _GameState extends State<Game> {
                 ),
               ),
               Container(
-                child: Center(child: _buildMobileLayout(resp, _currentQuestionIndex + 1)),
+                child: Center(
+                    child: _buildMobileLayout(resp, _currentQuestionIndex + 1)),
               ),
             ],
           );
@@ -190,6 +205,8 @@ class _GameState extends State<Game> {
 
   Widget _buildMobileLayout(Responsive resp, int nPregunta) {
     Questions currentQuestion = _randomQuestions[_currentQuestionIndex];
+    questtionTemp = null;
+    questtionTemp = currentQuestion;
 
     double title = resp.width <= 1000 ? 14 : 35;
     double text = resp.width <= 1000 ? 10 : 20;
@@ -217,7 +234,8 @@ class _GameState extends State<Game> {
                             Container(
                               child: Text(
                                 "Examen Finalizado \n Ver su resultados",
-                                style: TextStyle(color: Colors.white, fontSize: title),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: title),
                               ),
                             ),
                             const SizedBox(height: 20),
@@ -225,7 +243,7 @@ class _GameState extends State<Game> {
                               height: 300,
                               width: 300,
                               child: Image.asset(
-                                'assets/icono5.png',
+                                'assets/icono7.png',
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -234,12 +252,15 @@ class _GameState extends State<Game> {
                               child: Padding(
                                   padding: const EdgeInsets.only(right: 15),
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Visibility(
                                         visible: true,
                                         child: PrettyWaveButton(
+                                          backgroundColor: Colors.cyan,
+                                          
                                           child: const Text(
                                             'Resultados',
                                             style: TextStyle(
@@ -250,10 +271,13 @@ class _GameState extends State<Game> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Result(_questionsSuccess, _questionsFail)),
+                                                  builder: (context) => Result(
+                                                      _questionsSuccess,
+                                                      _questionsFail,
+                                                      _questionsNoAnswer)),
                                             );
                                           },
+                                          
                                         ),
                                       ),
                                     ],
@@ -291,9 +315,11 @@ class _GameState extends State<Game> {
                                   md: 12,
                                   lg: 12,
                                   child: Padding(
-                                    padding: const EdgeInsets.only(left: 30, right: 30, top: 20),
+                                    padding: const EdgeInsets.only(
+                                        left: 30, right: 30, top: 20),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         MyTextClass(
                                           text: "Pregunta $nPregunta",
@@ -338,24 +364,35 @@ class _GameState extends State<Game> {
                                         padding: const EdgeInsets.all(20),
                                         child: ColorChangingButton(
                                           tapSaveResult: (value) {
-                                            if (saveResult && _showAnswers && value != 1) {
-                                              value == 2
-                                                  ? _questionsSuccess.add(currentQuestion)
-                                                  : value == 3
-                                                      ? _questionsFail.add(currentQuestion)
-                                                      : null;
-                                              saveResult = false;
+                                            if (isTap) {
+                                              if (saveResult &&
+                                                  _showAnswers &&
+                                                  value != 1) {
+                                                value == 2
+                                                    ? _questionsSuccess
+                                                        .add(currentQuestion)
+                                                    : value == 3
+                                                        ? _questionsFail.add(
+                                                            currentQuestion)
+                                                        : null;
+                                                saveResult = false;
+                                              }
                                             }
                                           },
-                                          tap: () {
-                                            setState(() {
-                                              _showAnswers = true;
-                                            });
-                                            Future.delayed(const Duration(seconds: 1), () {
-                                              _nextQuestion();
-                                              _showAnswers = false;
-                                            });
-                                          },
+                                          tap: !timeActive
+                                              ? () {
+                                                  isTap = true;
+                                                  setState(() {
+                                                    _showAnswers = true;
+                                                  });
+                                                  Future.delayed(
+                                                      const Duration(
+                                                          seconds: 1), () {
+                                                    _nextQuestion();
+                                                    _showAnswers = false;
+                                                  });
+                                                }
+                                              : () {},
                                           initialState: _showAnswers
                                               ? entry.value.is_correct
                                                   ? 2
@@ -364,7 +401,9 @@ class _GameState extends State<Game> {
                                           text: entry.value.qnswer_text ?? '',
                                           onChangeColor: (int newState) {
                                             return _showAnswers
-                                                ? (entry.value.is_correct ? 2 : 3)
+                                                ? (entry.value.is_correct
+                                                    ? 2
+                                                    : 3)
                                                 : 1;
                                           },
                                           showAnswers: _showAnswers,
@@ -373,6 +412,51 @@ class _GameState extends State<Game> {
                                     ))
                                 .toList(),
                           ),
+                          const SizedBox(height: 20),
+                          Visibility(
+                            visible: timeActive,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 20),
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showAnswers = true;
+                                      });
+                                      Future.delayed(const Duration(seconds: 1),
+                                          () {
+                                        _nextQuestion();
+                                      });
+                                      timeActive = false;
+                                    },
+                                    icon: const Icon(Icons.play_arrow,
+                                        color: Colors.white),
+                                    label: const Text(
+                                      'Siguiente  Pregunta',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: Colors
+                                          .cyan, // Color del texto y el icono
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 10),
+                                      textStyle: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -381,93 +465,5 @@ class _GameState extends State<Game> {
               ),
             ],
           );
-  }
-}
-//! CAMBIAR EL COLOR DE LAS RESPUESTAS
-
-class ColorChangingButton extends StatefulWidget {
-  final Function(int) tapSaveResult;
-  final Function() tap;
-  final int initialState;
-  final int Function(int) onChangeColor;
-  final String text;
-  final bool _showAnswers = false;
-
-  ColorChangingButton(
-      {required this.tapSaveResult,
-      required this.tap,
-      this.initialState = 1,
-      required this.onChangeColor,
-      required this.text,
-      required bool showAnswers})
-      : super();
-
-  @override
-  _ColorChangingButtonState createState() => _ColorChangingButtonState();
-}
-
-class _ColorChangingButtonState extends State<ColorChangingButton> {
-  late int currentState;
-
-  @override
-  void initState() {
-    super.initState();
-    currentState = widget.initialState;
-  }
-
-  void validateAndChangeColor() {
-    setState(() {
-      if (!widget._showAnswers) {
-        widget.tapSaveResult(currentState);
-        currentState = widget.onChangeColor(currentState);
-      } else {
-        currentState = widget.initialState;
-      }
-
-      widget.tap();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!widget._showAnswers) {
-      widget.tapSaveResult(currentState);
-      currentState = widget.onChangeColor(currentState);
-    } else {
-      widget.tapSaveResult(currentState);
-      currentState = widget.initialState;
-    }
-    Color buttonColor = Colors.grey;
-
-    switch (currentState) {
-      case 1:
-        buttonColor = Colors.grey;
-        break;
-      case 2:
-        buttonColor = Colors.green;
-        break;
-      case 3:
-        buttonColor = Colors.red;
-        break;
-    }
-
-    return GestureDetector(
-      onTap: validateAndChangeColor,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 100),
-        width: 200,
-        height: 50,
-        decoration: BoxDecoration(
-          color: buttonColor,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Center(
-          child: Text(
-            widget.text,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-    );
   }
 }
