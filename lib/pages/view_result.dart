@@ -132,10 +132,10 @@ class _ResultState extends State<Result> {
                     blurRadius: 10,
                     offset: Offset(0, 4),
                   ),
-                ],
+                ]
               ),
-              width: w,
-              height: h,
+              width: w * 1.3,
+              height: h * 1.3,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
